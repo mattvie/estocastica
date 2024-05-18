@@ -1,6 +1,8 @@
 from time import perf_counter
 import math
-import random
+import numpy as np
+import matplotlib.pyplot as plt
+import matrixes
 
 def integer_operations(n):
     for j in range(n):
@@ -26,8 +28,16 @@ def floating_point_operations(n):
             math.tan(j+i+r)
             math.tanh(j+i+r)
             (r * (i+1) + (j+1)) / ((i+1) * r - (j+1))
+
+def matrix_operations(A, B, n):
+    for i in range(n):
+        np.dot(A, B)
+        np.dot(np.transpose(A), np.transpose(B))
+        np.dot(A, A)
+        np.dot(np.transpose(A), np.transpose(A))
+        np.dot(B, B)
+        np.dot(np.transpose(B), np.transpose(B))
     
-             
 # Tempo de execução de operações inteiras
 time_start = perf_counter()
 integer_operations(2)
@@ -38,8 +48,18 @@ print(f'[integer] {time_duration} seconds')
 
 # Tempo de execução de operações ponto flutuante
 time_start = perf_counter()
-floating_point_operations(1000)
+floating_point_operations(10)
 time_end = perf_counter()
 
 time_duration = time_end - time_start
 print(f'[float] {time_duration} seconds')
+
+# Tempo de execução de operações matriciais
+A = matrixes.A
+B = matrixes.B
+time_start = perf_counter()
+matrix_operations(A, B, 10)
+time_end = perf_counter()
+
+time_duration = time_end - time_start
+print(f'[matrix] {time_duration} seconds')
