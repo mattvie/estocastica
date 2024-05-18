@@ -1,7 +1,15 @@
+import sys
+sys.dont_write_bytecode = True
+
+import os
 from time import perf_counter
 import math
 import numpy as np
+import pyfracgen as pf
+import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib import colormaps
+
 import matrixes
 
 def integer_operations(n):
@@ -37,7 +45,27 @@ def matrix_operations(A, B, n):
         np.dot(np.transpose(A), np.transpose(A))
         np.dot(B, B)
         np.dot(np.transpose(B), np.transpose(B))
-    
+
+def graphical_operations(n):
+    string = "AAAAAABBBBBB"
+    xbound = (2.5, 3.4)
+    ybound = (3.4, 4.0)
+    res = pf.lyapunov(
+        string, xbound, ybound, width=4, height=3, dpi=300, ninit=2000, niter=2000
+    )
+    pf.images.markus_lyapunov_image(
+        res, colormaps["bone"], colormaps["bone_r"], gammas=(8, 1)
+    )
+    plt.savefig("lyapunov.png")
+
+def disk_operations(file_size_mb):
+    data = os.urandom(file_size_mb * 1024 * 1024)
+    with open("test_file.bin", "wb") as f:
+        f.write(data)
+    with open("test_file.bin", "rb") as f:
+        _ = f.read()
+    os.remove("test_file.bin")
+
 # Tempo de execução de operações inteiras
 time_start = perf_counter()
 integer_operations(2)
@@ -63,3 +91,13 @@ time_end = perf_counter()
 
 time_duration = time_end - time_start
 print(f'[matrix] {time_duration} seconds')
+
+# Tempo de execução de operações gráficas
+time_start = perf_counter()
+graphical_operations(10)
+time_end = perf_counter()
+
+time_duration = time_end - time_start
+print(f'[graphical] {time_duration} seconds')
+
+# Tempo
