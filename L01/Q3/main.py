@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib import colormaps
 
 import matrixes
+import custom_disk
 
 def integer_operations(n):
     for j in range(n):
@@ -46,29 +47,27 @@ def matrix_operations(A, B, n):
         np.dot(B, B)
         np.dot(np.transpose(B), np.transpose(B))
 
-def graphical_operations(n):
+def graphical_operations():
     string = "AAAAAABBBBBB"
     xbound = (2.5, 3.4)
     ybound = (3.4, 4.0)
-    res = pf.lyapunov(
-        string, xbound, ybound, width=4, height=3, dpi=300, ninit=2000, niter=2000
-    )
-    pf.images.markus_lyapunov_image(
-        res, colormaps["bone"], colormaps["bone_r"], gammas=(8, 1)
-    )
+    res = pf.lyapunov(string, xbound, ybound, width=4, height=3, dpi=300, ninit=2000, niter=2000)
+    pf.images.markus_lyapunov_image(res, colormaps["bone"], colormaps["bone_r"], gammas=(8, 1))
     plt.savefig("lyapunov.png")
 
-def disk_operations(file_size_mb):
-    data = os.urandom(file_size_mb * 1024 * 1024)
-    with open("test_file.bin", "wb") as f:
-        f.write(data)
-    with open("test_file.bin", "rb") as f:
-        _ = f.read()
-    os.remove("test_file.bin")
+def disk_operations(source_file, n):
+    for i in range(n):
+        custom_disk.copy_file(source_file, f"copy_{i}_{source_file}")
+
+        if not custom_disk.compare_files(source_file, f"copy_{i}_{source_file}"):
+            print("[file {i}] mismatched")
+        else:
+            print(f"[file {i}] ok")
+
 
 # Tempo de execução de operações inteiras
 time_start = perf_counter()
-integer_operations(2)
+integer_operations(1000)
 time_end = perf_counter()
 
 time_duration = time_end - time_start
@@ -76,7 +75,7 @@ print(f'[integer] {time_duration} seconds')
 
 # Tempo de execução de operações ponto flutuante
 time_start = perf_counter()
-floating_point_operations(10)
+floating_point_operations(1000)
 time_end = perf_counter()
 
 time_duration = time_end - time_start
@@ -86,7 +85,7 @@ print(f'[float] {time_duration} seconds')
 A = matrixes.A
 B = matrixes.B
 time_start = perf_counter()
-matrix_operations(A, B, 10)
+matrix_operations(A, B, 10000)
 time_end = perf_counter()
 
 time_duration = time_end - time_start
@@ -94,10 +93,16 @@ print(f'[matrix] {time_duration} seconds')
 
 # Tempo de execução de operações gráficas
 time_start = perf_counter()
-graphical_operations(10)
+graphical_operations()
 time_end = perf_counter()
 
 time_duration = time_end - time_start
 print(f'[graphical] {time_duration} seconds')
 
-# Tempo
+# Tempo de execução de operações de disco
+time_start = perf_counter()
+disk_operations("100000000B.txt", 10)
+time_end = perf_counter()
+
+time_duration = time_end - time_start
+print(f'[disk] {time_duration} seconds')
