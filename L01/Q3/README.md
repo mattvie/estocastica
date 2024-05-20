@@ -1,17 +1,25 @@
-# How to run this benchmark
+# Python Benchmarking
 
-## Installing dependencies
+## Team
 
-Open terminal on this directory and run:
+Name | Email
+-- | --
+Frederico Janovitz | fjn@cin.ufpe.br
+Klarissa Morais | kam@cin.ufpe.br
+Mateus Viégas | mvmf@cin.ufpe.br
+
+## Installing Dependencies
+
+Open your terminal inside this directory and run the following command:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Running benchmark
+## Running The Code
 
-Run
+On the same terminal, you can run:
 
-```console
+```bash
 python main.py
 ```
